@@ -1,0 +1,45 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\Frontend_Projects\\freim_4pract_2026\\freims\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{C645C62A-C2D0-41F0-B679-4E8478880A86}|freims\\freims.csproj|d:\\frontend_projects\\freim_4pract_2026\\freims\\freims\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C645C62A-C2D0-41F0-B679-4E8478880A86}|freims\\freims.csproj|solutionrelative:freims\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Program.cs",
+              "DocumentMoniker": "D:\\Frontend_Projects\\freim_4pract_2026\\freims\\freims\\Program.cs",
+              "RelativeDocumentMoniker": "freims\\Program.cs",
+              "ToolTip": "D:\\Frontend_Projects\\freim_4pract_2026\\freims\\freims\\Program.cs",
+              "RelativeToolTip": "freims\\Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-11T14:57:41.992Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{e5c86464-96be-4d7c-9a8b-abcb3bbf5f92}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
