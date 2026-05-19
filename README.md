@@ -314,6 +314,93 @@ booking_compensation_total 1
 booking_step_latency_ms{step="GrantAccess",kind="avg"} 0.42
 ```
 
+## Проверка идемпотентности
+
+Отправка одного и того же события дважды с одинаковым `idempotencyKey` не должна менять состояние процесса при второй отправке, а должна вернуть кэшированный результат.
+
+```powershell
+$base = "http://localhost:5000"
+
+# Первое успешное выполнение события
+Invoke-RestMethod "$base/events" -Method Post -ContentType "application/json" -Body '{
+  "processKey": "booking-idempotency",
+  "idempotencyKey": "event-unique-1",
+  "eventName": "AcceptApplication",
+  "correlationId": "corr-idempotency"
+}'
+
+# Повторное выполнение того же события с тем же idempotencyKey
+Invoke-RestMethod "$base/events" -Method Post -ContentType "application/json" -Body '{
+  "processKey": "booking-idempotency",
+  "idempotencyKey": "event-unique-1",
+  "eventName": "AcceptApplication",
+  "correlationId": "corr-idempotency-duplicate"
+}'
+```
+
+Ожидаемый результат второй команды: HTTP `200 OK`, `duplicate: true` в ответе, и в логах сообщение `Duplicate delivery ignored`. Состояние процесса не должно измениться.
+
+## Сценарий сбоя без компенсации
+
+Имитация сбоя на шаге, который не предусматривает специальной компенсации. Процесс должен перейти в состояние `Error`.
+
+```powershell
+$base = "http://localhost:5000"
+
+# Запускаем процесс
+Invoke-RestMethod "$base/events" -Method Post -ContentType "application/json" -Body '{
+  "processKey": "booking-error",
+  "idempotencyKey": "event-1",
+  "eventName": "AcceptApplication",
+  "correlationId": "corr-error"
+}'
+
+# Имитируем сбой на следующем шаге (например, при BookResource), но без логики компенсации
+Invoke-RestMethod "$base/events" -Method Post -ContentType "application/json" -Body '{
+  "processKey": "booking-error",
+  "idempotencyKey": "event-2",
+  "eventName": "BookResource",
+  "correlationId": "corr-error",
+  "simulateFailure": true
+}'
+```
+
+Ожидаемый результат второй команды: HTTP `500 Internal Server Error`, состояние процесса `Error`.
+
+Проверить состояние:
+
+```powershell
+Invoke-RestMethod "$base/processes/booking-error"
+```
+
+## Просмотр состояния процесса
+
+В любой момент можно получить текущий снимок состояния процесса, отправив GET-запрос на соответствующий эндпоинт.
+
+Например, для процесса `booking-42` после успешного сценария:
+
+```powershell
+$base = "http://localhost:5000"
+
+Invoke-RestMethod "$base/processes/booking-42"
+```
+
+Для процесса `booking-fail` после сценария с компенсацией:
+
+```powershell
+$base = "http://localhost:5000"
+
+Invoke-RestMethod "$base/processes/booking-fail"
+```
+
+Для процесса `booking-error` после сценария сбоя:
+
+```powershell
+$base = "http://localhost:5000"
+
+Invoke-RestMethod "$base/processes/booking-error"
+```
+
 ## Журналы
 
 В журналы пишутся:
